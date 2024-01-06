@@ -1,6 +1,7 @@
 using Docsy.Endpoints.Slices.Collections.Groups.Endpoints.Persistence.Entities;
 using Docsy.Endpoints.Slices.Collections.Groups.Models;
 using Docsy.Endpoints.Slices.Common.Persistence;
+using MongoDB.Driver;
 
 namespace Docsy.Endpoints.Slices.Collections.Groups.Endpoints;
 
@@ -13,8 +14,13 @@ internal sealed class EndpointLister : IDataLister<EndpointEntity, GroupId>
         _mongoCollectionFactory = mongoCollectionFactory;
     }
 
-    public Task<IEnumerable<EndpointEntity>> ListEntities(GroupId key)
+    public async Task<IEnumerable<EndpointEntity>> ListEntities(GroupId key)
     {
-        throw new NotImplementedException();
+        var endpoints = _mongoCollectionFactory
+            .GetCollection<EndpointEntity>();
+        var filter = Builders<EndpointEntity>.Filter.Eq(
+            endpoint => endpoint.GroupId,
+            key.GetName());
+        return await endpoints.Find(filter).ToListAsync();
     }
 }

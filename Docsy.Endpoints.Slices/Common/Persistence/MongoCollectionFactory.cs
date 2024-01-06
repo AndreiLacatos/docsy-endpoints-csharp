@@ -1,7 +1,10 @@
 using System.Collections.ObjectModel;
 using Docsy.Endpoints.Slices.Collections.Groups.Endpoints.Models;
+using Docsy.Endpoints.Slices.Collections.Groups.Endpoints.Persistence.Entities;
 using Docsy.Endpoints.Slices.Collections.Models;
+using Docsy.Endpoints.Slices.Collections.Persistence.Entities;
 using Docsy.Endpoints.Slices.Schemas.Models;
+using Docsy.Endpoints.Slices.Schemas.Persistence.Entities;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -14,9 +17,9 @@ public sealed class MongoCollectionFactory : IMongoCollectionFactory
     private static readonly ReadOnlyDictionary<Type, string> CollectionMap =
         new Dictionary<Type, string>
         {
-            { typeof(Collection), nameof(Collection).ToLower() },
-            { typeof(Endpoint), nameof(Endpoint).ToLower() },
-            { typeof(Schema), nameof(Schema).ToLower() },
+            { typeof(CollectionEntity), nameof(Collection).ToLower() },
+            { typeof(EndpointEntity), nameof(Endpoint).ToLower() },
+            { typeof(SchemaEntity), nameof(Schema).ToLower() },
         }.AsReadOnly();
 
     public MongoCollectionFactory(IOptions<MongoConnectionOptions> mongoOptions)

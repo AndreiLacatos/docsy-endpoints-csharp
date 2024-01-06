@@ -8,6 +8,9 @@ internal sealed class SchemaEntity
     [BsonElement("_id")]
     public ObjectId Id { get; set; }
 
+    [BsonElement("collectionId")]
+    public string CollectionId { get; set; } = string.Empty;
+
     [BsonElement("schemaId")]
     public string SchemaId { get; set; } = string.Empty;
 

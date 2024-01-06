@@ -1,6 +1,7 @@
 using Docsy.Endpoints.Slices.Collections.Models;
 using Docsy.Endpoints.Slices.Collections.Persistence.Entities;
 using Docsy.Endpoints.Slices.Common.Persistence;
+using MongoDB.Driver;
 
 namespace Docsy.Endpoints.Slices.Collections;
 
@@ -13,8 +14,13 @@ internal sealed class CollectionLister : IDataLister<CollectionEntity, ProjectId
         _mongoCollectionFactory = mongoCollectionFactory;
     }
 
-    public Task<IEnumerable<CollectionEntity>> ListEntities(ProjectId key)
+    public async Task<IEnumerable<CollectionEntity>> ListEntities(ProjectId key)
     {
-        throw new NotImplementedException();
+        var collections = _mongoCollectionFactory
+            .GetCollection<CollectionEntity>();
+        var filter = Builders<CollectionEntity>.Filter.Eq(
+            collection => collection.ProjectId,
+            key.GetName());
+        return await collections.Find(filter).ToListAsync();
     }
 }
