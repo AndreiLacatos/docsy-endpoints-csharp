@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package apiCollection;
+
+service EndpointService {
+  rpc GetCollectionGroups(GetCollectionGroupsRequest) returns (GetCollectionGroupsResponse);
+  rpc GetGroupEndpoints(GetGroupEndpointsRequest) returns (GetGroupEndpointsResponse);
+  rpc GetCollectionSchemas(GetCollectionSchemasRequest) returns (GetCollectionSchemasResponse);
+}
+
+message CollectionGroup {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/groups/c9eedc5f-c4ff-44b2-b225-ec1c8581984e
+  string groupName = 2;
+}
+
+message EndpointParameter {
+  string parameterName = 1;
+  string parameterType = 2;
+}
+
+message EndpointParameters {
+  repeated EndpointParameter queryParameters = 1;
+  repeated EndpointParameter routeParameters = 2;
+  string requestBodySchema = 3;
+}
+
+message EndpointResponse {
+  int32 responseCode = 1;
+  string responseBodySchema = 2;
+}
+
+message Endpoint {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/groups/c9eedc5f-c4ff-44b2-b225-ec1c8581984e/endpoints/330537eb-1a28-4430-9146-92cf99694357
+  string url = 2;
+  string httpVerb = 3;
+  EndpointParameters parameters = 4;
+  repeated EndpointResponse responses = 5;
+}
+
+message SchemaEntry {
+  string entryName = 2;
+  string entryType = 3;
+  string schemaReference = 4;
+  bool isArray = 5;
+}
+
+message Schema {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/schema/c9eedc5f-c4ff-44b2-b225-ec1c8581984e
+  string schemaName = 2;
+  repeated SchemaEntry entries = 3;
+}
+
+message GetCollectionGroupsRequest {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F
+}
+
+message GetGroupEndpointsRequest {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/groups/48D873C6-7DE6-4209-809F-9866BB0D7426
+}
+
+message GetCollectionSchemasRequest {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F
+}
+
+message GetCollectionGroupsResponse {
+  repeated CollectionGroup groups = 1;
+}
+
+message GetGroupEndpointsResponse{
+  repeated Endpoint endpoints = 1;
+}
+
+message GetCollectionSchemasResponse {
+  repeated Schema schemas = 1;
+}

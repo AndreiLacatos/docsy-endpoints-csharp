@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package apiCollection;
+
+service CollectionService {
+  rpc ListProjectCollections(ListProjectCollectionsRequest) returns (ListProjectCollectionsResponse); 
+  rpc GetCollection(GetCollectionRequest) returns (EndpointCollection);
+  rpc CreateCollection(EndpointCollection) returns (EndpointCollection);
+}
+
+message EndpointCollection {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F
+  string collectionName = 2;
+  string description = 3;
+  string version = 4;
+}
+
+message ListProjectCollectionsRequest {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F
+}
+
+message GetCollectionRequest {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F
+}
+
+message ListProjectCollectionsResponse {
+  repeated EndpointCollection collections = 1;
+}

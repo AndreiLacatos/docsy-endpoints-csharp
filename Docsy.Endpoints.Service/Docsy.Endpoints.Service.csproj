@@ -13,7 +13,14 @@
 
     <ItemGroup>
       <Folder Include="Protos\" />
-      <Folder Include="Services\" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Protobuf Include="Protos\api-collection.proto" GrpcServices="Server" ProtoCompile="true" CompileOutputs="true" />
+        <Protobuf Include="Protos\api-endpoint.proto" GrpcServices="Server" ProtoCompile="true" CompileOutputs="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Docsy.Endpoints.Slices\Docsy.Endpoints.Slices.csproj" />
+    </ItemGroup>
 </Project>
