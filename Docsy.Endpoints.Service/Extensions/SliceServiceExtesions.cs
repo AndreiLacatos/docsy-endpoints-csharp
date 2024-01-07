@@ -16,6 +16,7 @@ public static class SliceServiceExtesions
         serviceCollection.AddScoped<IMongoCollectionFactory, MongoCollectionFactory>();
         serviceCollection.AddScoped<IDataReaderFactory, DataReaderFactory>();
         serviceCollection.AddScoped<IDataListerFactory, DataListerFactory>();
+        serviceCollection.AddScoped<IDataWriterFactory, DataWriterFactory>();
         serviceCollection.AddScoped<ICollectionService, CollectionService>();
         serviceCollection.AddScoped<IGroupService, GroupService>();
         serviceCollection.AddScoped<IEndpointService, EndpointService>();
