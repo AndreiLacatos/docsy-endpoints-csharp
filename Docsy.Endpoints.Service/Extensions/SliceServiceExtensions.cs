@@ -6,7 +6,7 @@ using Docsy.Endpoints.Slices.Schemas;
 
 namespace Docsy.Endpoints.Extensions;
 
-public static class SliceServiceExtesions
+public static class SliceServiceExtensions
 {
     public static void AddSliceServices(this IServiceCollection serviceCollection)
     {

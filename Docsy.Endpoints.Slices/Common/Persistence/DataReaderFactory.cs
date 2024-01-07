@@ -1,5 +1,5 @@
 using Docsy.Endpoints.Slices.Collections;
-using Docsy.Endpoints.Slices.Collections.Models;
+using Docsy.Endpoints.Slices.Collections.Persistence.Entities;
 
 namespace Docsy.Endpoints.Slices.Common.Persistence;
 
@@ -18,7 +18,7 @@ public sealed class DataReaderFactory : IDataReaderFactory
     {
         var reader = typeof(TEntity).Name switch
         {
-            nameof(Collection) => new CollectionReader(_mongoCollectionFactory),
+            nameof(CollectionEntity) => new CollectionReader(_mongoCollectionFactory),
             _ => throw new UnknownEntityException(typeof(TEntity).Name),
         };
         if (reader is not IDataReader<TEntity, TKey> dataReader)

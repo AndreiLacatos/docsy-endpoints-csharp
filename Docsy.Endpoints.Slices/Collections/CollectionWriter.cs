@@ -24,6 +24,7 @@ internal sealed class CollectionWriter : IDataWriter<CollectionEntity>
             .Set(collection => collection.CollectionId, entity.CollectionId)
             .Set(collection => collection.CollectionName, entity.CollectionName)
             .Set(collection => collection.Description, entity.Description)
+            .Set(collection => collection.Version, entity.Version)
             .Set(collection => collection.Groups, entity.Groups);
         var options = new UpdateOptions
         {

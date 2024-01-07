@@ -40,10 +40,12 @@ public sealed class GrpcCollectionService : CollectionService.CollectionServiceB
         return GrpcCollectionMapper.Map(collection);
     }
 
-    public override Task<EndpointCollection> CreateCollection(
+    public override async Task<EndpointCollection> CreateCollection(
         EndpointCollection request,
         ServerCallContext context)
     {
-        return base.CreateCollection(request, context);
+        var collection = GrpcCollectionMapper.Map(request);
+        var created = await _collectionService.CreateCollection(collection);
+        return GrpcCollectionMapper.Map(created);
     }
 }
