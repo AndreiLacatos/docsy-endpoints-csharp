@@ -10,7 +10,9 @@ namespace Docsy.Endpoints.Slices.Collections.Mapper;
 internal static partial class CollectionMapper
 {
     internal static partial Collection Map(CollectionEntity source);
-
+    internal static partial CollectionEntity Map(Collection source);
     private static CollectionId Map(string source) =>
         CollectionId.FromName(source);
+    private static string Map(CollectionId source) =>
+        source.GetName();
 }

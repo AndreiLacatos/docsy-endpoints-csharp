@@ -8,6 +8,8 @@ namespace Docsy.Endpoints.Slices.Collections.Groups.Mapper;
 internal static partial class GroupMapper
 {
     internal static partial Group Map(GroupEntity source);
+    internal static partial GroupEntity Map(Group source);
 
     private static GroupId Map(string source) => GroupId.FromName(source);
+    private static string Map(GroupId source) => source.GetName();
 }
