@@ -9,14 +9,17 @@ namespace Docsy.Endpoints.Slices.Collections.Groups;
 public sealed class GroupService : IGroupService
 {
     private readonly IDataLister<GroupEntity, CollectionId> _groupLister;
-    private readonly IDataWriter<Group> _groupWriter;
+    private readonly IDataReader<Collection, CollectionId> _collectionStageReader;
+    private readonly IDataWriter<Collection> _collectionStageWriter;
 
     public GroupService(
         IDataListerFactory dataListerFactory,
+        IDataReaderFactory dataReaderFactory,
         IDataWriterFactory dataWriterFactory)
     {
         _groupLister = dataListerFactory.GetLister<GroupEntity, CollectionId>();
-        _groupWriter = dataWriterFactory.GetWriter<Group>();
+        _collectionStageReader = dataReaderFactory.GetStageReader<Collection, CollectionId>();
+        _collectionStageWriter = dataWriterFactory.GetStageWriter<Collection>();
     }
 
     public async Task<IEnumerable<Group>> GetCollectionGroups(CollectionId collectionId)
@@ -25,8 +28,22 @@ public sealed class GroupService : IGroupService
         return groups.Select(GroupMapper.Map);
     }
 
-    public Task<Group> CreateGroup(Group group)
+    public async Task<IEnumerable<Group>> GetStagedCollectionGroups(CollectionId collectionId)
     {
-        return _groupWriter.WriteEntity(group);
+        var collection = await _collectionStageReader
+            .GetEntityOrDefault(collectionId);
+        return collection!.Groups;
+    }
+
+    public async Task<Group> CreateGroup(Group group)
+    {
+        var collection = await _collectionStageReader
+            .GetEntityOrDefault(group.GroupId.CollectionId);
+        collection!.Groups = new List<Group>(collection.Groups)
+        {
+            group,
+        };
+        await _collectionStageWriter.WriteEntity(collection);
+        return group;
     }
 }

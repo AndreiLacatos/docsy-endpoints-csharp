@@ -41,6 +41,21 @@ public sealed class GrpcEndpointService : EndpointService.EndpointServiceBase
         };
     }
 
+    public override async Task<GetCollectionGroupsResponse> GetStagedCollectionGroups(
+        GetCollectionGroupsRequest request,
+        ServerCallContext context)
+    {
+        var collectionId = CollectionId.FromName(request.Name);
+        var groups = await _groupService.GetStagedCollectionGroups(collectionId);
+        return new GetCollectionGroupsResponse
+        {
+            Groups =
+            {
+                groups.Select(GrpcGroupMapper.Map),
+            },
+        };
+    }
+
     public override async Task<GetGroupEndpointsResponse> GetGroupEndpoints(
         GetGroupEndpointsRequest request,
         ServerCallContext context)
@@ -56,12 +71,42 @@ public sealed class GrpcEndpointService : EndpointService.EndpointServiceBase
         };
     }
 
+    public override async Task<GetGroupEndpointsResponse> GetStagedGroupEndpoints(
+        GetGroupEndpointsRequest request,
+        ServerCallContext context)
+    {
+        var groupId = GroupId.FromName(request.Name);
+        var endpoints = await _endpointService.GetStagedGroupEndpoints(groupId);
+        return new GetGroupEndpointsResponse
+        {
+            Endpoints =
+            {
+                endpoints.Select(GrpcEndpointMapper.Map),
+            },
+        };
+    }
+
     public override async Task<GetCollectionSchemasResponse> GetCollectionSchemas(
         GetCollectionSchemasRequest request,
         ServerCallContext context)
     {
         var collectionId = CollectionId.FromName(request.Name);
         var schemas = await _schemaService.GetCollectionSchemas(collectionId);
+        return new GetCollectionSchemasResponse
+        {
+            Schemas =
+            {
+                schemas.Select(GrpcSchemaMapper.Map),
+            },
+        };
+    }
+
+    public override async Task<GetCollectionSchemasResponse> GetStagedCollectionSchemas(
+        GetCollectionSchemasRequest request,
+        ServerCallContext context)
+    {
+        var collectionId = CollectionId.FromName(request.Name);
+        var schemas = await _schemaService.GetStagedCollectionSchemas(collectionId);
         return new GetCollectionSchemasResponse
         {
             Schemas =

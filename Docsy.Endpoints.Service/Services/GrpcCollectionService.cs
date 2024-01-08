@@ -40,6 +40,15 @@ public sealed class GrpcCollectionService : CollectionService.CollectionServiceB
         return GrpcCollectionMapper.Map(collection);
     }
 
+    public override async Task<EndpointCollection> GetStagedCollection(
+        GetCollectionRequest request,
+        ServerCallContext context)
+    {
+        var collectionId = CollectionId.FromName(request.Name);
+        var collection = await _collectionService.GetStagedCollection(collectionId);
+        return GrpcCollectionMapper.Map(collection);
+    }
+
     public override async Task<EndpointCollection> CreateCollection(
         EndpointCollection request,
         ServerCallContext context)

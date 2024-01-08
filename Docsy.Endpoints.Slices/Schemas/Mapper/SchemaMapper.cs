@@ -8,6 +8,7 @@ namespace Docsy.Endpoints.Slices.Schemas.Mapper;
 internal static partial class SchemaMapper
 {
     internal static partial Schema Map(SchemaEntity source);
+    internal static partial void Map(Schema source, Schema target);
     internal static SchemaId? MapSchemaId(string? source)
     {
         if (string.IsNullOrWhiteSpace(source))

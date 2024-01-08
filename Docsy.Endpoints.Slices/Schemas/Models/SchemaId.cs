@@ -2,38 +2,38 @@ using Docsy.Endpoints.Slices.Collections.Models;
 
 namespace Docsy.Endpoints.Slices.Schemas.Models;
 
-public struct SchemaId
+public readonly partial struct SchemaId
 {
     public Guid Value { get; }
 
-    public ProjectId ProjectId { get; }
+    public CollectionId CollectionId { get; }
 
-    private SchemaId(ProjectId projectId, Guid value)
+    private SchemaId(CollectionId collectionId, Guid value)
     {
-        ProjectId = projectId;
+        CollectionId = collectionId;
         Value = value;
     }
 
     public static SchemaId FromName(string name)
     {
         var parts = name.Split('/').ToList();
-        return new SchemaId(ProjectId.FromName(string.Join('/', parts[0], parts[1])), Guid.Parse(parts.Last()));
+        return new SchemaId(CollectionId.FromName(string.Join('/', parts[..^2])), Guid.Parse(parts.Last()));
     }
 
-    public static SchemaId FromValue(ProjectId projectId, Guid value)
+    public static SchemaId FromValue(CollectionId collectionId, Guid value)
     {
-        return new SchemaId(projectId, value);
+        return new SchemaId(collectionId, value);
     }
 
-    public static SchemaId FromValue(ProjectId projectId, string value)
+    public static SchemaId FromValue(CollectionId collectionId, string value)
     {
-        return new SchemaId(projectId, Guid.Parse(value));
+        return new SchemaId(collectionId, Guid.Parse(value));
     }
 
-    public static SchemaId MakeNew(ProjectId projectId) =>
-        FromValue(projectId, Guid.NewGuid());
+    public static SchemaId MakeNew(CollectionId collectionId) =>
+        FromValue(collectionId, Guid.NewGuid());
 
-    public string GetName() => $"{ProjectId.GetName()}/collections/{Value}";
+    public string GetName() => $"{CollectionId.GetName()}/collections/{Value}";
 
     public override string ToString() => GetName();
 }

@@ -4,7 +4,7 @@ using Docsy.Endpoints.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpc();
-builder.Services.AddSliceServices();
+builder.Services.AddSliceServices(builder.Configuration);
 
 var app = builder.Build();
 

@@ -8,8 +8,10 @@ namespace Docsy.Endpoints.Slices.Collections;
 public sealed class CollectionService : ICollectionService
 {
     private readonly IDataReader<CollectionEntity, CollectionId> _collectionReader;
+    private readonly IDataReader<Collection, CollectionId> _collectionStageReader;
     private readonly IDataLister<CollectionEntity, ProjectId> _collectionLister;
     private readonly IDataWriter<Collection> _collectionWriter;
+    private readonly IDataWriter<Collection> _collectionStageWriter;
 
     public CollectionService(
         IDataReaderFactory dataReaderFactory,
@@ -19,6 +21,8 @@ public sealed class CollectionService : ICollectionService
         _collectionReader = dataReaderFactory.GetReader<CollectionEntity, CollectionId>();
         _collectionLister = dataListerFactory.GetLister<CollectionEntity, ProjectId>();
         _collectionWriter = dataWriterFactory.GetWriter<Collection>();
+        _collectionStageReader = dataReaderFactory.GetStageReader<Collection, CollectionId>();
+        _collectionStageWriter = dataWriterFactory.GetStageWriter<Collection>();
     }
 
     public async Task<IEnumerable<Collection>> ListProjectCollections(
@@ -37,6 +41,19 @@ public sealed class CollectionService : ICollectionService
         }
 
         return CollectionMapper.Map(collection);
+    }
+
+    public async Task<Collection> GetStagedCollection(CollectionId collectionId)
+    {
+        var staged = await _collectionStageReader.GetEntityOrDefault(collectionId);
+        if (staged is null)
+        {
+            var collection = await GetCollection(collectionId);
+            await _collectionStageWriter.WriteEntity(collection);
+            staged = collection;
+        }
+
+        return staged;
     }
 
     public Task<Collection> CreateCollection(Collection collection)

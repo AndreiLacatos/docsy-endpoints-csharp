@@ -1,6 +1,6 @@
 namespace Docsy.Endpoints.Slices.Collections.Models;
 
-public struct CollectionId
+public readonly partial struct CollectionId
 {
     public Guid Value { get; }
 

@@ -6,5 +6,6 @@ public interface ICollectionService
 {
     public Task<IEnumerable<Collection>> ListProjectCollections(ProjectId projectId);
     public Task<Collection> GetCollection(CollectionId collectionId);
+    public Task<Collection> GetStagedCollection(CollectionId collectionId);
     public Task<Collection> CreateCollection(Collection collection);
 }

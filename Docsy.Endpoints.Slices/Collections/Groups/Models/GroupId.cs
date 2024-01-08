@@ -2,7 +2,7 @@ using Docsy.Endpoints.Slices.Collections.Models;
 
 namespace Docsy.Endpoints.Slices.Collections.Groups.Models;
 
-public struct GroupId
+public readonly partial struct GroupId
 {
     public Guid Value { get; }
 

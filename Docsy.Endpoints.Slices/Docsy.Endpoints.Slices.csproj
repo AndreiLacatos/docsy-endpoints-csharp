@@ -10,6 +10,40 @@
       <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
       <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
       <PackageReference Include="Riok.Mapperly" Version="3.3.1-next.1" />
+      <PackageReference Include="StackExchange.Redis" Version="2.7.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Collections\Groups\Endpoints\Models\EndpointId.Equatable.cs">
+        <DependentUpon>EndpointId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Collections\Groups\Models\GroupId.Equatable.cs">
+        <DependentUpon>GroupId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Collections\Models\CollectionId.Equatable.cs">
+        <DependentUpon>CollectionId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Collections\Models\ProjectId.Equatable.cs">
+        <DependentUpon>ProjectId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Schemas\Models\SchemaId.Equatable.cs">
+        <DependentUpon>SchemaId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Schemas\Models\SchemaId.JsonConverter.cs">
+        <DependentUpon>SchemaId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Collections\Models\ProjectId.JsonConverter.cs">
+        <DependentUpon>ProjectId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Collections\Models\CollectionId.JsonConverter.cs">
+        <DependentUpon>CollectionId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Collections\Groups\Models\GroupId.JsonConverter.cs">
+        <DependentUpon>GroupId.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Collections\Groups\Endpoints\Models\Endpoint.JsonConverter.cs">
+        <DependentUpon>EndpointId.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
