@@ -4,8 +4,42 @@ package apiCollection;
 
 service EndpointService {
   rpc GetCollectionGroups(GetCollectionGroupsRequest) returns (GetCollectionGroupsResponse);
+  rpc GetStagedCollectionGroups(GetCollectionGroupsRequest) returns (GetCollectionGroupsResponse);
   rpc GetGroupEndpoints(GetGroupEndpointsRequest) returns (GetGroupEndpointsResponse);
+  rpc GetStagedGroupEndpoints(GetGroupEndpointsRequest) returns (GetGroupEndpointsResponse);
   rpc GetCollectionSchemas(GetCollectionSchemasRequest) returns (GetCollectionSchemasResponse);
+  rpc GetStagedCollectionSchemas(GetCollectionSchemasRequest) returns (GetCollectionSchemasResponse);
+  rpc CreateGroup(CollectionGroup) returns (CollectionGroup);
+  rpc StageEndpointChange(stream StageEndpointChangeRequest) returns (stream StageEndpointChangeResponse);
+  rpc StageSchemaChange(stream StageSchemaChangeRequest) returns (stream StageSchemaChangeResponse);
+}
+
+message StageEndpointChangeRequest {
+  string target = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/groups/c9eedc5f-c4ff-44b2-b225-ec1c8581984e/endpoints/48D873C6-7DE6-4209-809F-9866BB0D7426
+  Endpoint changeSet = 2;
+  string mode = 3;
+  string requestKey = 4;
+}
+
+message StageEndpointChangeResponse {
+  string target = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/groups/c9eedc5f-c4ff-44b2-b225-ec1c8581984e/endpoints/48D873C6-7DE6-4209-809F-9866BB0D7426
+  Endpoint changeSet = 2;
+  string mode = 3;
+  string requestKey = 4;
+}
+
+message StageSchemaChangeRequest {
+  string target = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/schemas/48D873C6-7DE6-4209-809F-9866BB0D7426
+  Schema changeSet = 2;
+  string mode = 3;
+  string requestKey = 4;
+}
+
+message StageSchemaChangeResponse {
+  string target = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/schemas/48D873C6-7DE6-4209-809F-9866BB0D7426
+  Schema changeSet = 2;
+  string mode = 3;
+  string requestKey = 4;
 }
 
 message CollectionGroup {

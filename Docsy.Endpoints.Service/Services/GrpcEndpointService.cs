@@ -70,4 +70,13 @@ public sealed class GrpcEndpointService : EndpointService.EndpointServiceBase
             },
         };
     }
+
+    public override async Task<CollectionGroup> CreateGroup(
+        CollectionGroup request,
+        ServerCallContext context)
+    {
+        var groupToCreate = GrpcGroupMapper.Map(request);
+        var createdGroup = await _groupService.CreateGroup(groupToCreate);
+        return GrpcGroupMapper.Map(createdGroup);
+    }
 }

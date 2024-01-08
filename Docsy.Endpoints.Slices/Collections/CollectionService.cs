@@ -9,7 +9,7 @@ public sealed class CollectionService : ICollectionService
 {
     private readonly IDataReader<CollectionEntity, CollectionId> _collectionReader;
     private readonly IDataLister<CollectionEntity, ProjectId> _collectionLister;
-    private readonly IDataWriter<CollectionEntity> _collectionWriter;
+    private readonly IDataWriter<Collection> _collectionWriter;
 
     public CollectionService(
         IDataReaderFactory dataReaderFactory,
@@ -18,7 +18,7 @@ public sealed class CollectionService : ICollectionService
     {
         _collectionReader = dataReaderFactory.GetReader<CollectionEntity, CollectionId>();
         _collectionLister = dataListerFactory.GetLister<CollectionEntity, ProjectId>();
-        _collectionWriter = dataWriterFactory.GetWriter<CollectionEntity>();
+        _collectionWriter = dataWriterFactory.GetWriter<Collection>();
     }
 
     public async Task<IEnumerable<Collection>> ListProjectCollections(
@@ -39,10 +39,8 @@ public sealed class CollectionService : ICollectionService
         return CollectionMapper.Map(collection);
     }
 
-    public async Task<Collection> CreateCollection(Collection collection)
+    public Task<Collection> CreateCollection(Collection collection)
     {
-        var entity = CollectionMapper.Map(collection);
-        var written = await _collectionWriter.WriteEntity(entity);
-        return CollectionMapper.Map(written);
+        return _collectionWriter.WriteEntity(collection);
     }
 }

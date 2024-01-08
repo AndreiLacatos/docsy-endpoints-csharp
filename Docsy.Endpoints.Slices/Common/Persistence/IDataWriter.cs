@@ -3,5 +3,5 @@ namespace Docsy.Endpoints.Slices.Common.Persistence;
 public interface IDataWriter<TEntity>
     where TEntity : class
 {
-    Task<TEntity> WriteEntity(TEntity entity);
+    Task<TEntity> WriteEntity(TEntity obj);
 }

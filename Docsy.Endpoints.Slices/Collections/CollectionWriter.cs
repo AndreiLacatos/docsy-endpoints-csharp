@@ -1,10 +1,12 @@
+using Docsy.Endpoints.Slices.Collections.Mapper;
+using Docsy.Endpoints.Slices.Collections.Models;
 using Docsy.Endpoints.Slices.Collections.Persistence.Entities;
 using Docsy.Endpoints.Slices.Common.Persistence;
 using MongoDB.Driver;
 
 namespace Docsy.Endpoints.Slices.Collections;
 
-internal sealed class CollectionWriter : IDataWriter<CollectionEntity>
+internal sealed class CollectionWriter : IDataWriter<Collection>
 {
     private readonly IMongoCollectionFactory _mongoCollectionFactory;
 
@@ -13,12 +15,13 @@ internal sealed class CollectionWriter : IDataWriter<CollectionEntity>
         _mongoCollectionFactory = mongoCollectionFactory;
     }
 
-    public async Task<CollectionEntity> WriteEntity(CollectionEntity entity)
+    public async Task<Collection> WriteEntity(Collection obj)
     {
         var collections = _mongoCollectionFactory.GetCollection<CollectionEntity>();
         var filter = Builders<CollectionEntity>.Filter.Eq(
             collection => collection.CollectionId,
-            entity.CollectionId);
+            obj.CollectionId.GetName());
+        var entity = CollectionMapper.Map(obj);
         var update = Builders<CollectionEntity>.Update
             .Set(collection => collection.ProjectId, entity.ProjectId)
             .Set(collection => collection.CollectionId, entity.CollectionId)
@@ -31,6 +34,6 @@ internal sealed class CollectionWriter : IDataWriter<CollectionEntity>
             IsUpsert = true,
         };
         await collections.UpdateOneAsync(filter, update, options);
-        return entity;
+        return CollectionMapper.Map(entity);
     }
 }

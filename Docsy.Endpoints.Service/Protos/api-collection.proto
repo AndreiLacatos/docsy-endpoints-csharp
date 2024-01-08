@@ -1,11 +1,18 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 
 package apiCollection;
 
 service CollectionService {
-  rpc ListProjectCollections(ListProjectCollectionsRequest) returns (ListProjectCollectionsResponse); 
+  rpc ListProjectCollections(ListProjectCollectionsRequest) returns (ListProjectCollectionsResponse);
   rpc GetCollection(GetCollectionRequest) returns (EndpointCollection);
+  rpc GetStagedCollection(GetCollectionRequest) returns (EndpointCollection);
   rpc CreateCollection(EndpointCollection) returns (EndpointCollection);
+  rpc PublishCollectionChanges(PublishCollectionChangesRequest) returns (google.protobuf.Empty);
+}
+
+message PublishCollectionChangesRequest {
+  string name = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F
 }
 
 message EndpointCollection {

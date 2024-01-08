@@ -6,4 +6,5 @@ namespace Docsy.Endpoints.Slices.Collections.Groups;
 public interface IGroupService
 {
     Task<IEnumerable<Group>> GetCollectionGroups(CollectionId collectionId);
+    Task<Group> CreateGroup(Group group);
 }

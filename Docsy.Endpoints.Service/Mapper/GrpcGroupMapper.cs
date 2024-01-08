@@ -8,7 +8,9 @@ namespace Docsy.Endpoints.Mapper;
 internal static partial class GrpcGroupMapper
 {
     [MapProperty(nameof(Group.GroupId), nameof(CollectionGroup.Name))]
-    [MapProperty(nameof(Group.GroupName), nameof(CollectionGroup.GroupName))]
     internal static partial CollectionGroup Map(Group source);
+    [MapProperty(nameof(CollectionGroup.Name), nameof(Group.GroupId))]
+    internal static partial Group Map(CollectionGroup source);
     private static string Map(GroupId source) => source.GetName();
+    private static GroupId Map(string source) => GroupId.FromName(source);
 }
