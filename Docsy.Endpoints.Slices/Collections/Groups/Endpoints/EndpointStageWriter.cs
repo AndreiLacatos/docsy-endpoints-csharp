@@ -18,33 +18,39 @@ internal sealed class EndpointStageWriter : IDataWriter<Endpoint>
     public async Task<Endpoint> WriteEntity(Endpoint obj)
     {
         var database = _connectionMultiplexer.GetDatabase();
-        var redisKey = obj.EndpointId.GroupId.Value.ToString();
+        var redisKey = $"{obj.EndpointId.GroupId.Value.ToString()}:endpoints";
         var stagedValues = await database.StringGetAsync(redisKey);
-        if (!string.IsNullOrWhiteSpace(stagedValues.ToString()))
+        var stage = JsonSerializer.Deserialize<ICollection<Endpoint>>(
+            stagedValues.ToString(),
+            options: StageJsonSerializerOptions.SharedOptions);
+        if (stage is not null)
         {
-            var stage = JsonSerializer.Deserialize<ICollection<Endpoint>>(
-                stagedValues.ToString(),
-                options: StageJsonSerializerOptions.SharedOptions);
-            if (stage is not null)
+            var target = stage.FirstOrDefault(
+                endpoint => endpoint.EndpointId == obj.EndpointId);
+
+            if (target is null)
             {
-                var target = stage.FirstOrDefault(
-                    endpoint => endpoint.EndpointId == obj.EndpointId);
-
-                if (target is null)
-                {
-                    stage.Add(obj);
-                }
-                else
-                {
-                    EndpointMapper.Map(obj, target);
-                }
-
-                var serialized = JsonSerializer.Serialize(stage, StageJsonSerializerOptions.SharedOptions);
-                await database.StringSetAsync(
-                    redisKey,
-                    serialized,
-                    TimeSpan.FromDays(45));
+                stage.Add(obj);
             }
+            else
+            {
+                EndpointMapper.Map(obj, target);
+            }
+
+            var serialized = JsonSerializer.Serialize(stage, StageJsonSerializerOptions.SharedOptions);
+            await database.StringSetAsync(
+                redisKey,
+                serialized,
+                TimeSpan.FromDays(45));
+        }
+        else
+        {
+            var newStage = new[] { obj };
+            var serialized = JsonSerializer.Serialize(newStage, StageJsonSerializerOptions.SharedOptions);
+            await database.StringSetAsync(
+                redisKey,
+                serialized,
+                TimeSpan.FromDays(45));
         }
 
         return obj;

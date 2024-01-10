@@ -19,23 +19,11 @@ internal sealed class CollectionStageWriter : IDataWriter<Collection>
     {
         var database = _connectionMultiplexer.GetDatabase();
         var redisKey = obj.CollectionId.Value.ToString();
-        var stagedValues = await database.StringGetAsync(redisKey);
-        if (!string.IsNullOrWhiteSpace(stagedValues.ToString()))
-        {
-            var stage = JsonSerializer.Deserialize<Collection>(
-                stagedValues.ToString(),
-                options: StageJsonSerializerOptions.SharedOptions);
-            if (stage is not null)
-            {
-                CollectionMapper.Map(obj, stage);
-                var serialized = JsonSerializer.Serialize(stage, StageJsonSerializerOptions.SharedOptions);
-                await database.StringSetAsync(
-                    redisKey,
-                    serialized,
-                    TimeSpan.FromDays(45));
-            }
-        }
-
+        var serialized = JsonSerializer.Serialize(obj, StageJsonSerializerOptions.SharedOptions);
+        await database.StringSetAsync(
+            redisKey,
+            serialized,
+            TimeSpan.FromDays(45));
         return obj;
     }
 }

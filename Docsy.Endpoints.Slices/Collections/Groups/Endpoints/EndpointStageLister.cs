@@ -18,7 +18,7 @@ internal sealed class EndpointStageLister : IDataLister<Endpoint, GroupId>
     public async Task<IEnumerable<Endpoint>> ListEntities(GroupId key)
     {
         var database = _connectionMultiplexer.GetDatabase();
-        var redisKey = key.Value.ToString();
+        var redisKey = $"{key.Value.ToString()}:endpoints";
         var stagedValues = await database.StringGetAsync(redisKey);
         if (!string.IsNullOrWhiteSpace(stagedValues.ToString()))
         {

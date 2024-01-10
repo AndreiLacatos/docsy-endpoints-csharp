@@ -18,7 +18,7 @@ internal sealed class SchemaStageLister : IDataLister<Schema, CollectionId>
     public async Task<IEnumerable<Schema>> ListEntities(CollectionId key)
     {
         var database = _connectionMultiplexer.GetDatabase();
-        var redisKey = key.Value.ToString();
+        var redisKey = $"{key.Value.ToString()}:schemas";
         var stagedValues = await database.StringGetAsync(redisKey);
         if (!string.IsNullOrWhiteSpace(stagedValues.ToString()))
         {
