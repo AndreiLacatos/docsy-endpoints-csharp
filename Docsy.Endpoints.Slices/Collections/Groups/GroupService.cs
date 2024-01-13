@@ -46,4 +46,15 @@ public sealed class GroupService : IGroupService
         await _collectionStageWriter.WriteEntity(collection);
         return group;
     }
+
+    public async Task<GroupChangeSet> StageGroupChanges(GroupChangeSet changeSet)
+    {
+        var stagedCollection = await _collectionStageReader
+            .GetEntityOrDefault(changeSet.Target.CollectionId);
+        var targetGroup = stagedCollection!.Groups.First(group =>
+                group.GroupId == changeSet.Target);
+        targetGroup.GroupName = changeSet.ChangeSet.GroupName;
+        await _collectionStageWriter.WriteEntity(stagedCollection);
+        return changeSet;
+    }
 }

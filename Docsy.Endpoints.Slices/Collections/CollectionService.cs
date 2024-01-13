@@ -60,4 +60,15 @@ public sealed class CollectionService : ICollectionService
     {
         return _collectionWriter.WriteEntity(collection);
     }
+
+    public async Task<CollectionChangeSet> StageCollectionChange(CollectionChangeSet changeSet)
+    {
+        var collection = await _collectionStageReader
+            .GetEntityOrDefault(changeSet.Target);
+        collection!.CollectionName = changeSet.ChangeSet.CollectionName;
+        collection.Description = changeSet.ChangeSet.Description;
+        collection.Version = changeSet.ChangeSet.Version;
+        await _collectionStageWriter.WriteEntity(collection);
+        return changeSet;
+    }
 }

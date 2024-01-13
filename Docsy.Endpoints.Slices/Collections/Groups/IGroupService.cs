@@ -8,4 +8,5 @@ public interface IGroupService
     Task<IEnumerable<Group>> GetCollectionGroups(CollectionId collectionId);
     Task<IEnumerable<Group>> GetStagedCollectionGroups(CollectionId collectionId);
     Task<Group> CreateGroup(Group group);
+    Task<GroupChangeSet> StageGroupChanges(GroupChangeSet changeSet);
 }

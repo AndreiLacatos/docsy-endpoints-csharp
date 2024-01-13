@@ -57,4 +57,13 @@ public sealed class GrpcCollectionService : CollectionService.CollectionServiceB
         var created = await _collectionService.CreateCollection(collection);
         return GrpcCollectionMapper.Map(created);
     }
+
+    public override async Task<StageCollectionChangeResponse> StageCollectionChange(
+        StageCollectionChangeRequest request,
+        ServerCallContext context)
+    {
+        var staged = await _collectionService
+            .StageCollectionChange(GrpcCollectionMapper.Map(request));
+        return GrpcCollectionMapper.Map(staged);
+    }
 }

@@ -10,8 +10,23 @@ service EndpointService {
   rpc GetCollectionSchemas(GetCollectionSchemasRequest) returns (GetCollectionSchemasResponse);
   rpc GetStagedCollectionSchemas(GetCollectionSchemasRequest) returns (GetCollectionSchemasResponse);
   rpc CreateGroup(CollectionGroup) returns (CollectionGroup);
+  rpc StageGroupChange (StageGroupChangeRequest) returns (StageGroupChangeResponse);
   rpc StageEndpointChange(stream StageEndpointChangeRequest) returns (stream StageEndpointChangeResponse);
   rpc StageSchemaChange(stream StageSchemaChangeRequest) returns (stream StageSchemaChangeResponse);
+}
+
+message StageGroupChangeRequest {
+  string target = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/groups/c9eedc5f-c4ff-44b2-b225-ec1c8581984e
+  CollectionGroup changeSet = 2;
+  string mode = 3;
+  string requestKey = 4;
+}
+
+message StageGroupChangeResponse {
+  string target = 1; // e.g. projects/07C2F2C9-F542-4076-95FA-CB1F0905C83F/collections/F11AB74E-C3EC-46EC-8A74-5090C994E47F/groups/c9eedc5f-c4ff-44b2-b225-ec1c8581984e
+  CollectionGroup changeSet = 2;
+  string mode = 3;
+  string requestKey = 4;
 }
 
 message StageEndpointChangeRequest {
@@ -100,7 +115,7 @@ message GetCollectionGroupsResponse {
   repeated CollectionGroup groups = 1;
 }
 
-message GetGroupEndpointsResponse{
+message GetGroupEndpointsResponse{ 
   repeated Endpoint endpoints = 1;
 }
 

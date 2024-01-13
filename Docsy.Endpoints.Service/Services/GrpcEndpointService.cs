@@ -124,4 +124,13 @@ public sealed class GrpcEndpointService : EndpointService.EndpointServiceBase
         var createdGroup = await _groupService.CreateGroup(groupToCreate);
         return GrpcGroupMapper.Map(createdGroup);
     }
+
+    public override async Task<StageGroupChangeResponse> StageGroupChange(
+        StageGroupChangeRequest request,
+        ServerCallContext context)
+    {
+        var stagedChanges = await _groupService
+            .StageGroupChanges(GrpcGroupMapper.Map(request));
+        return GrpcGroupMapper.Map(stagedChanges);
+    }
 }

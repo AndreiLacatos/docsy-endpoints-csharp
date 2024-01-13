@@ -8,4 +8,5 @@ public interface ICollectionService
     public Task<Collection> GetCollection(CollectionId collectionId);
     public Task<Collection> GetStagedCollection(CollectionId collectionId);
     public Task<Collection> CreateCollection(Collection collection);
+    public Task<CollectionChangeSet> StageCollectionChange(CollectionChangeSet changeSet);
 }
