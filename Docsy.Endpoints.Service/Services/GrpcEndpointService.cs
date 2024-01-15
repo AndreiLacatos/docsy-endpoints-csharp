@@ -2,6 +2,7 @@ using ApiCollection;
 using Docsy.Endpoints.Mapper;
 using Docsy.Endpoints.Slices.Collections.Groups;
 using Docsy.Endpoints.Slices.Collections.Groups.Endpoints;
+using Docsy.Endpoints.Slices.Collections.Groups.Endpoints.Models;
 using Docsy.Endpoints.Slices.Collections.Groups.Models;
 using Docsy.Endpoints.Slices.Collections.Models;
 using Docsy.Endpoints.Slices.Schemas;
@@ -15,15 +16,18 @@ public sealed class GrpcEndpointService : EndpointService.EndpointServiceBase
     private readonly IGroupService _groupService;
     private readonly IEndpointService _endpointService;
     private readonly ISchemaService _schemaService;
+    private readonly ILogger<GrpcEndpointService> _logger;
 
     public GrpcEndpointService(
         IGroupService groupService,
         IEndpointService endpointService,
-        ISchemaService schemaService)
+        ISchemaService schemaService,
+        ILogger<GrpcEndpointService> logger)
     {
         _groupService = groupService;
         _endpointService = endpointService;
         _schemaService = schemaService;
+        _logger = logger;
     }
 
     public override async Task<GetCollectionGroupsResponse> GetCollectionGroups(
@@ -132,5 +136,36 @@ public sealed class GrpcEndpointService : EndpointService.EndpointServiceBase
         var stagedChanges = await _groupService
             .StageGroupChanges(GrpcGroupMapper.Map(request));
         return GrpcGroupMapper.Map(stagedChanges);
+    }
+
+    public override async Task StageEndpointChange(
+        IAsyncStreamReader<StageEndpointChangeRequest> requestStream,
+        IServerStreamWriter<StageEndpointChangeResponse> responseStream,
+        ServerCallContext context)
+    {
+        await foreach (var message in requestStream.ReadAllAsync())
+        {
+            try
+            {
+                var changeRequest = new EndpointChangeSet
+                {
+                    EndpointId = EndpointId.FromName(message.Target),
+                    Endpoint =  GrpcEndpointMapper.Map(message.ChangeSet),
+                    Type = GrpcEndpointMapper.MapChangeSetType(message.Mode),
+                };
+                var result = await _endpointService.StageEndpointChange(changeRequest);
+                await responseStream.WriteAsync(new StageEndpointChangeResponse
+                {
+                    ChangeSet = GrpcEndpointMapper.Map(result),
+                    Target = message.Target,
+                    Mode = message.Mode,
+                    RequestKey = message.RequestKey,
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning(e, "Unexpected error whilst staging content change");
+            }
+        }
     }
 }

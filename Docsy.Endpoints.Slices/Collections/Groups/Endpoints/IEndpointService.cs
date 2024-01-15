@@ -7,4 +7,5 @@ public interface IEndpointService
 {
     Task<IEnumerable<Endpoint>> GetGroupEndpoints(GroupId groupId);
     Task<IEnumerable<Endpoint>> GetStagedGroupEndpoints(GroupId groupId);
+    Task<Endpoint> StageEndpointChange(EndpointChangeSet changeSet);
 }

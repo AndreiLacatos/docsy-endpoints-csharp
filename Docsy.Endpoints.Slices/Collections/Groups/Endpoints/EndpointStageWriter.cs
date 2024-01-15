@@ -20,11 +20,11 @@ internal sealed class EndpointStageWriter : IDataWriter<Endpoint>
         var database = _connectionMultiplexer.GetDatabase();
         var redisKey = $"{obj.EndpointId.GroupId.Value.ToString()}:endpoints";
         var stagedValues = await database.StringGetAsync(redisKey);
-        var stage = JsonSerializer.Deserialize<ICollection<Endpoint>>(
-            stagedValues.ToString(),
-            options: StageJsonSerializerOptions.SharedOptions);
-        if (stage is not null)
+        if (!string.IsNullOrWhiteSpace(stagedValues))
         {
+            var stage = JsonSerializer.Deserialize<ICollection<Endpoint>>(
+                stagedValues.ToString(),
+                options: StageJsonSerializerOptions.SharedOptions);
             var target = stage.FirstOrDefault(
                 endpoint => endpoint.EndpointId == obj.EndpointId);
 

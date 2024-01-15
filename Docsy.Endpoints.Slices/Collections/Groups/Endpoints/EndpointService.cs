@@ -43,4 +43,10 @@ public sealed class EndpointService : IEndpointService
 
         return endpoints;
     }
+
+    public Task<Endpoint> StageEndpointChange(
+        EndpointChangeSet changeSet)
+    {
+        return _endpointStageWriter.WriteEntity(changeSet.Endpoint);
+    }
 }
